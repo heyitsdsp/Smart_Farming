@@ -6,6 +6,7 @@ int pressurePin = 0;
 int val;
 float pkPa; // pressure in kPa
 float pAtm; // pressure in Atm
+double soil_moisture;
 
 unsigned long time;
 # include "DHT.h"
@@ -55,6 +56,7 @@ void setup() {
   P_SENSOR.begin();
   K_SENSOR.begin();
   pinMode(sensor_pin, INPUT);
+  pinMode(A5, OUTPUT);
 
 }
 
@@ -77,6 +79,7 @@ void loop() {
 
   float Relative_Humidity = dht.readHumidity();             //Read the humidity from the sensor 
   float Absolute_Temperature = dht.readTemperature();       //Read the temperature from the sensor in degree celsius
+  float output_value;
 
   if(isnan(Relative_Humidity) || isnan(Absolute_Temperature))     //This check is necessary because sometimes the DHT gives NaN errors
   {
@@ -85,7 +88,7 @@ void loop() {
   }
 
   Serial.print("Humidity: ");
-  Serial.print(Relative_Humidity);
+  Serial.println(Relative_Humidity);
 
   Serial.print("\tTemperature: ");
   Serial.println(Absolute_Temperature);
@@ -111,7 +114,7 @@ void loop() {
   Serial.print("K_VALUE: ");
   Serial.println(k_value);
 
-  Serial.println("\n");
+  //Serial.println("\n");
 
 
 
@@ -130,12 +133,24 @@ void loop() {
 
 
    delay(200);
-  float output_value = analogRead(sensor_pin);
+  output_value = analogRead(sensor_pin);
+  output_value = 100-((output_value/1023)*100);
+  soil_moisture = output_value;
 
   Serial.print("Soil mositure: ");
-  Serial.println(output_value);
+  Serial.print(soil_moisture);
+  Serial.println(" %");
+
+  if(soil_moisture <= 40)
+  {
+    digitalWrite(A5, HIGH);
+  }
+  else
+  {
+    digitalWrite(A5, LOW);
+  }
 
   delay(2000);
 
-  
+  Serial.println("\n");  
 }
