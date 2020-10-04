@@ -12,14 +12,25 @@ import random
 ipinfo_api_key = (input('Enter the API Key : '))
 handler = ipinfo.getHandler(ipinfo_api_key)
 details = handler.getDetails()
-print(details.city)
+city = details.city
 
 # Generation of random values for circuit simulation
 
-Artificial_pH = random.uniform(2,12)
-Artificial_N = random.normalvariate(0.551782, 0.209015)
-Artificial_P = random.normalvariate(0.550594, 0.203223)
-Artificial_K = random.normalvariate(0.554283, 0.209547)
+Artificial_pH = round(random.uniform(2,12), 2)
+Artificial_N = round(random.normalvariate(0.551782, 0.209015), 2)
+Artificial_P = round(random.normalvariate(0.550594, 0.203223), 2)
+Artificial_K = round(random.normalvariate(0.554283, 0.209547), 2)
 
-Artificial_Moisture = random.uniform(0,100)
+Artificial_Moisture = round(random.uniform(27,87), 2)
+Artificial_Pressure = round(random.uniform(98, 103), 2)
+
+Artificial_temp = round(random.uniform(25, 45), 2)
+Artificial_humidity = round(random.uniform(29, 90), 2)
+
+# Collating all random values in a list
+
+readings = [Artificial_Pressure, Artificial_N, Artificial_P, Artificial_K,
+            Artificial_temp, Artificial_humidity, Artificial_Moisture]
+
+print(city, ' : ', readings)
 
