@@ -19,6 +19,12 @@ This repository contains the code and circuits for a smart farming system using 
 - Figma
 
 ## Libraries Used
+### For Arduino
+DHT (Adafruit Sensor Library): Version 1.1.1
+
+### For Python
+ipinfo : To get the location of user from IP Address
+random : To generate random values for the proteus circuit
 
 ## Working
 
