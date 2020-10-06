@@ -7,6 +7,8 @@ Created on Mon Oct  5 21:53:27 2020
 import pandas as pd
 import os
 
-loc = os.getcwd() + r'/final_new_crop_data_own_repeat.csv'
+loc = os.getcwd() + r'/Datasets/Crop_Pred.csv'
 table = pd.read_csv(loc)
+
+
 
