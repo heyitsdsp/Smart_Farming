@@ -52,9 +52,11 @@ for i in range(0, len(table['Crop'])):
 """
 
 # SCALING USING NUMPY
+"""
+table.N = table.N.astype('float64')
 for i in range(0, len(table.N)):
     table.N[i] = round(np.interp(table.N[i], [10, 180], [0, 1]), 2)
-    
+""" 
     
         
     
