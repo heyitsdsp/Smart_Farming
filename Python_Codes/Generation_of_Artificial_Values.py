@@ -30,7 +30,8 @@ Artificial_humidity = round(random.uniform(29, 90), 2)
 # Collating all random values in a list
 
 readings = [Artificial_Pressure, Artificial_N, Artificial_P, Artificial_K,
-            Artificial_temp, Artificial_humidity, Artificial_Moisture]
+            Artificial_temp, Artificial_humidity, Artificial_Moisture,
+            Artificial_pH]
 
 print(city, ' : ', readings)
 
