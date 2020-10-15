@@ -44,13 +44,22 @@ for i in range(0, len(table.N)):
 table.P = table.P.astype('float64')
 for i in range(0, len(table.P)):
     table.P[i] = round(np.interp(table.P[i], [10, 125], [0, 1]), 1)
+
 table.K = table.K.astype('float64')
 for i in range(0, len(table.K)):
     table.K[i] = round(np.interp(table.K[i], [10, 200], [0, 1]), 1)
     
 # delete unnamed
-    table.drop(['Unnamed: 0'],axis=1,inplace=True)
-    
+
+table.drop(['Unnamed: 0'],axis=1,inplace=True)
+indexing_Crop = {}    
+
 #indexing each dataset
-    enum_table = enumerate(table)        
+
+for index ,value in table.Crop.items():
+    index = index+1
+    indexing_Crop[index] = value
+
+for index in range(0,len(table.Crop)):
+    table.Crop[index] = index + 1
     
