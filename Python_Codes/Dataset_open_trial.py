@@ -41,6 +41,16 @@ table.N = table.N.astype('float64')
 for i in range(0, len(table.N)):
     table.N[i] = round(np.interp(table.N[i], [10, 180], [0, 1]), 1)
 
-  
-        
+table.P = table.P.astype('float64')
+for i in range(0, len(table.P)):
+    table.P[i] = round(np.interp(table.P[i], [10, 125], [0, 1]), 1)
+table.K = table.K.astype('float64')
+for i in range(0, len(table.K)):
+    table.K[i] = round(np.interp(table.K[i], [10, 200], [0, 1]), 1)
+    
+# delete unnamed
+    table.drop(['Unnamed: 0'],axis=1,inplace=True)
+    
+#indexing each dataset
+    enum_table = enumerate(table)        
     
