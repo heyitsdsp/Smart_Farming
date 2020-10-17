@@ -19,15 +19,15 @@ def get_readings():
     # Generation of random values for circuit simulation
     
     Artificial_pH = round(random.uniform(2,12), 2)
-    Artificial_N = round(random.normalvariate(0.551782, 0.209015), 2)
-    Artificial_P = round(random.normalvariate(0.550594, 0.203223), 2)
-    Artificial_K = round(random.normalvariate(0.554283, 0.209547), 2)
+    Artificial_N = round(random.normalvariate(0.551782, 0.209015), 1)
+    Artificial_P = round(random.normalvariate(0.550594, 0.203223), 1)
+    Artificial_K = round(random.normalvariate(0.554283, 0.209547), 1)
     
-    Artificial_Moisture = round(random.uniform(27,87), 2)
-    Artificial_Pressure = round(random.uniform(98, 103), 2)
+    Artificial_Moisture = round(random.uniform(27,87), 1)
+    Artificial_Pressure = round(random.uniform(98, 103), 1)
     
-    Artificial_temp = round(random.uniform(25, 45), 2)
-    Artificial_humidity = round(random.uniform(29, 90), 2)
+    Artificial_temp = round(random.uniform(25, 45), 1)
+    Artificial_humidity = round(random.uniform(29, 90), 1)
     
     # Collating all random values in a list
     

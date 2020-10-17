@@ -4,17 +4,11 @@ Created on Mon Oct  5 21:53:27 2020
 
 @author: bambo
 """
-def get_data_details(loc):
-    # IMPORT ALL NECESSARY MODULES
-    import pandas as pd
-    import numpy as np
-    import os
-    # PICK AND READ DATASET DYNAMICALLY 
-    table = pd.read_csv(loc)
-    
-    # DROP DUPLICATE RECORDS (IF ANY)
-    table = table.drop_duplicates(subset = None, keep = 'first')
-    
+# IMPORT ALL NECESSARY MODULES
+import pandas as pd
+import numpy as np
+
+def process_crops(table):
     # GETTING RID OF ALL UNNECESSARY SYMBOLS OR NAMES
     spec_chars = ["!",'"',"#","%","&","'","(",")",
                   "*","+",",","-",".","/",":",";","<",
@@ -61,20 +55,32 @@ def get_data_details(loc):
     for i in range(0, len(table.Crop)):
         for k in indexing_Crop.keys():
             if(table.Crop[i] == k):
-                table.Crop[i] = indexing_Crop[k]    
-    
+                table.Crop[i] = indexing_Crop[k]
+                
     return [table, indexing_Crop]
-#read FertPrediction dataset
-loc_Fert = os.getcwd() + r'/Datasets/FertPredictDataset.csv'
-data_Fert =pd.read_csv(loc_Fert)
 
-#drop the column Ca,Mg,S,lime,C,Moisture
-data_Fert.drop(['Ca','Mg','S','Lime','C','Moisture'],axis=1,inplace=True)
+def get_training_crop_details(loc):
+    # PICK AND READ DATASET DYNAMICALLY 
+    table = pd.read_csv(loc)
+    
+    # DROP DUPLICATE RECORDS (IF ANY)
+    table = table.drop_duplicates(subset = 'Crop', keep = 'first')
+    x = process_crops(table)
+    
+    return x
+    
+def get_test_crop_details(loc):
+    # PICK AND READ DATASET DYNAMICALLY
+    table = pd.read_csv(loc)
+    
+    # DROP DUPLICATE RECORDS (IF ANY)
+    table = table.drop_duplicates(subset = None, keep = 'first')
+    y = process_crops(table)
+    
+    return y
+    
+    
+        
 
-#drop class =1 row 
-data_Fert.drop(data_Fert[data_Fert['class'] == 1].index, inplace = True) 
-
-#Replace [2,3,4] to [1,2,3]
-data_Fert["class"].replace({ 2 :  1, 3 : 2 , 4 : 3 }, inplace=True)
 
 
