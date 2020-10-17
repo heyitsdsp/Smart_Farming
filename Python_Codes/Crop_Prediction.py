@@ -4,7 +4,9 @@ Created on Fri Oct 16 02:19:00 2020
 
 @author: bambo
 """
+
 import Dataset as ds
+
 import Sensor_values as sv
 import os
 import matplotlib.pyplot as plt
@@ -30,7 +32,7 @@ Y = dataset.iloc[:, 0].values
 from sklearn.model_selection import train_test_split
 X_train, X_test, Y_train, Y_test = train_test_split(X, Y, test_size = 0.2,
                                                     random_state = 0)
-"""
+
 # MULTIPLE LINEAR REGRESSION
 from sklearn.linear_model import LinearRegression
 regressor = LinearRegression()
@@ -42,7 +44,6 @@ print(np.concatenate((Y_pred.reshape(len(Y_pred), 1),
                       Y_test.reshape(len(Y_pred), 1)), axis = 1))
 """
 
-"""
 # PLOYNOMIAL REGRESSION
 from sklearn.preprocessing import PolynomialFeatures
 from sklearn.linear_model import LinearRegression
@@ -61,7 +62,6 @@ Y_pred = Y_pred.astype('int')
 np.set_printoptions(precision = 2)
 print(np.concatenate((Y_pred.reshape(len(Y_pred), 1), 
                       Y_test.reshape(len(Y_pred), 1)), axis = 1))    
-"""
 
 """
 # BAYESIAN RIDGE REGRESSION
@@ -73,7 +73,7 @@ Y_pred = bay_ridge.predict(X_test)
 np.set_printoptions(precision = 2)
 print(np.concatenate((Y_pred.reshape(len(Y_pred), 1), 
                       Y_test.reshape(len(Y_pred), 1)), axis = 1))
-"""
+
 
 # ARTIFICIAL NEURAL NETWORK USING TENSORFLOW 2.0
 import tensorflow as tf
