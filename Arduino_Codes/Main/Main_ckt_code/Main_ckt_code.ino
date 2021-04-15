@@ -1,156 +1,132 @@
-#define kpa2atm 0.00986923267
-// pin defs
-int pressurePin = 0;
-
-// variables
-int val;
+#define soil_moisture A1    //soil moisture sensor data pin
+#define pressure A0         //pressure sensor data pin
+#define kpa2atm 0.00986923267   //conversion factor bet'n kpa to atm
+#include "DHT.h"      //include DHT library
+#define DHTPIN 6        // DHT sensor data pin
+#define DHTTYPE DHT11   //include DHT type
+#define PHPIN 2        //PH sensor data pin
+#define NPIN A2        //Nitrogen data pin
+#define PPIN A3        //Phosporous data pin
+#define KPIN A4        //Potassium data pin
+#define Valvepin A5     //valve data pin
+// variables defining
+int val;    // variables defining
 float pkPa; // pressure in kPa
 float pAtm; // pressure in Atm
-double soil_moisture;
 
-unsigned long time;
-# include "DHT.h"
+DHT dht(DHTPIN, DHTTYPE); //define DHT function
 
-#define DHTPIN 6
-#define DHTTYPE DHT22
-
-DHT dht(DHTPIN, DHTTYPE);
-# define NPIN 5
-# define PPIN 4
-# define KPIN 3
-# define TYPE DHT22
-
-DHT N_SENSOR(NPIN, TYPE);
-DHT P_SENSOR(PPIN, TYPE);
-DHT K_SENSOR(KPIN, TYPE);
-
-float read_n()
+void setup() 
 {
-  return N_SENSOR.readHumidity();
+  Serial.begin(9600);            //send data at port 9600
+  dht.begin();                   //start DHT
+  pinMode(soil_moisture, INPUT); //start soil moisture sensor
+  pinMode(PHPIN, INPUT);         //start pH sensor
+  pinMode(NPIN, INPUT);          //start N sensor
+  pinMode(PPIN, INPUT);          //start P sensor
+  pinMode(KPIN, INPUT);          //start K sensor
+  pinMode(Valvepin, OUTPUT);     //valve pin
 }
 
-float read_p()
+void loop() 
 {
-  return P_SENSOR.readHumidity();
-}
+  delay(1500);                                //getting soil moisture
+  Serial.println("Reading Data");
+  delay(1000);
+  float moisture = analogRead(soil_moisture);       //getting soil moisture
+  moisture = (moisture/1023)*100;       //getting soil moisture
 
-float read_k()
-{
-  return K_SENSOR.readHumidity();
-}
-# define PHPIN 7
-# define PHTYPE DHT22
-
-DHT ph(PHPIN, PHTYPE);
-
-float read_pH()
-{
-  return ph.readHumidity();
-}
-# define sensor_pin A1
-
-void setup() {
-   Serial.begin(9600);
-   dht.begin();
-   N_SENSOR.begin();
-  P_SENSOR.begin();
-  K_SENSOR.begin();
-  pinMode(sensor_pin, INPUT);
-  pinMode(A5, OUTPUT);
-
-}
-
-void loop() {
-  val = analogRead(pressurePin);
-  pkPa = ((float)val/(float)1023+0.095)/0.009;
-  pAtm = kpa2atm*pkPa;
+  if(isnan(moisture))                           //Adding failsafe for NaN values
+  {
+    Serial.println("Failed to read from soil misture sensor!");
+    return;
+  }
   
- 
-  /* send pressure to serial port */
-  Serial.print(pkPa);
-  Serial.print("kPa ");
-  Serial.print(pAtm);
-  Serial.println("Atm ");
-
-
+  else{
+  Serial.print("Soil mositure: ");            //printing soil moisture
+  Serial.print(moisture);                   //printing soil moisture
+  Serial.println(" %");}                //printing soil moisture
   
-  delay(200);           //Essential delay between measurements because DHT22 is a finicky sensor
+  delay(1000);
+  val = analogRead(pressure);                  //getting pressure
+  pkPa = ((float)val/(float)1023+0.095)/0.009; //getting pressure
+  pAtm = kpa2atm*pkPa;                         //getting pressure
 
-
-  float Relative_Humidity = dht.readHumidity();             //Read the humidity from the sensor 
-  float Absolute_Temperature = dht.readTemperature();       //Read the temperature from the sensor in degree celsius
-  float output_value;
-
-  if(isnan(Relative_Humidity) || isnan(Absolute_Temperature))     //This check is necessary because sometimes the DHT gives NaN errors
+  if(isnan(pressure))     //Adding failsafe for NaN values
   {
-    Serial.println("Failed to read from sensor!");
+    Serial.println("Failed to read from pressure sensor!");
     return;
   }
 
-  Serial.print("Humidity: ");
-  Serial.println(Relative_Humidity);
+  else{
+  Serial.print("Pressure in kPa: ");                         //printing pressure
+  Serial.println(pkPa);                         //printing pressure
+  Serial.print("Pressure in Atm: ");                         //printing pressure
+  Serial.println(pAtm);}                  //printing pressure
+  
+  delay(1000);           
+  float Relative_Humidity = dht.readHumidity();       //Read the humidity 
+  float Absolute_Temperature = dht.readTemperature(); //Read the temperature
 
-  Serial.print("\tTemperature: ");
-  Serial.println(Absolute_Temperature);
-
-  delay(200);
-
-  float n_value = read_n();
-  float p_value = read_p();
-  float k_value = read_k();
-
-  if(isnan(n_value) || isnan(p_value) || isnan(k_value))
+  if(isnan(Relative_Humidity) || isnan(Absolute_Temperature))     //Adding failsafe for NaN values
   {
-    Serial.println("Failed to read from a sensor!");
+    Serial.println("Failed to read from DHT sensor!");
+    return;
+  }
+  else{
+  Serial.print("Humidity: ");           //print H and T
+  Serial.println(Relative_Humidity*10);      //print H and T
+  Serial.print("\tTemperature: ");      //print H and T
+  Serial.println(Absolute_Temperature*10);} //print H and T
+
+  delay(1000);            
+  float pH_value = analogRead(PHPIN); //read pH value
+
+  if(isnan(pH_value))    //Adding failsafe for NaN values
+  {
+    Serial.println("Failed to read from pH sensor!");
     return;
   }
 
-  Serial.print("N_VALUE: ");
-  Serial.println(n_value);
+  else{
+  Serial.print("pH level is: ");     //print pH value
+  Serial.println(pH_value/71.43);}  //print pH value
 
-  Serial.print("P_VALUE: ");
-  Serial.println(p_value);
+  delay(1000);
+  float n_value = analogRead(NPIN);  //getting N value  
+  float p_value = analogRead(PPIN);  //getting P value
+  float k_value = analogRead(KPIN);  //getting K value
 
-  Serial.print("K_VALUE: ");
-  Serial.println(k_value);
-
-  //Serial.println("\n");
-
-
-
-   delay(200);            //Essential delay because pH sensor needs some time to stabilize
-
-  float pH_value = read_pH();
-
-  if(isnan(pH_value))
+  if(isnan(n_value) || isnan(p_value) || isnan(k_value))     //Adding failsafe for NaN values
   {
-    Serial.println("Failed to read from sensor");
+    Serial.println("Failed to read from NPK sensor!");
     return;
   }
 
-  Serial.print("pH: ");
-  Serial.println(pH_value);
+  else{
+  delay(300);
+  Serial.print("N VALUE (ppm): ");    //printing N value
+  Serial.println(n_value/28.57);      //printing N value
 
+  delay(300);
+  Serial.print("P VALUE (ppm): ");    //printing P value
+  Serial.println(p_value/40);      //printing P value
 
-   delay(200);
-  output_value = analogRead(sensor_pin);
-  output_value = 100-((output_value/1023)*100);
-  soil_moisture = output_value;
+  delay(300);
+  Serial.print("K VALUE (ppm): ");    //printing K value
+  Serial.println(k_value/20); }     //printing K value
 
-  Serial.print("Soil mositure: ");
-  Serial.print(soil_moisture);
-  Serial.println(" %");
-
-  if(soil_moisture <= 40)
+  if(moisture <= 40)            //condition for motor to start
   {
-    digitalWrite(A5, HIGH);
+    digitalWrite(Valvepin, HIGH);     //condition for motor to start
+    Serial.println("Valve open");
   }
   else
   {
-    digitalWrite(A5, LOW);
+    digitalWrite(Valvepin, LOW);      //condition for motor to stop
+    Serial.println("Valve closed");
   }
 
-  delay(2000);
-
+  delay(1000);
   Serial.println("\n");  
 }
